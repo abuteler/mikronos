@@ -87,7 +87,7 @@ impl eframe::App for App {
         });
 
         egui::CentralPanel::default().show(ctx, |ui: &mut egui::Ui| {
-            ui.label("TBC...");
+            ui.image(egui::include_image!("../assets/SpectrumBg.png"));
         });
     }
 }

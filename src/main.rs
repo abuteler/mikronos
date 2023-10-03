@@ -16,7 +16,10 @@ fn main() -> eframe::Result<()> {
     eframe::run_native(
         "Micronos",
         native_options,
-        Box::new(|cc| Box::new(micronos::App::new(cc))),
+        Box::new(|cc| {
+            egui_extras::install_image_loaders(&cc.egui_ctx);
+            Box::new(micronos::App::new(cc))
+        }),
     )
 }
 
