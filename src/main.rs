@@ -1,5 +1,6 @@
+
 #![warn(clippy::all, rust_2018_idioms)]
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 // When compiling natively:
 #[cfg(not(target_arch = "wasm32"))]
@@ -7,8 +8,9 @@ fn main() -> eframe::Result<()> {
     env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
 
     let native_options = eframe::NativeOptions {
-        initial_window_size: Some([670.0, 420.0].into()),
-        min_window_size: Some([650.0, 240.0].into()),
+        initial_window_size: Some(micronos::MAX_WINDOW_SIZE),
+        max_window_size: Some(micronos::MAX_WINDOW_SIZE),
+        min_window_size: Some(micronos::MIN_WINDOW_SIZE),
         ..Default::default()
     };
     eframe::run_native(

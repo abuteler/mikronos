@@ -2,3 +2,4 @@
 
 mod app;
 pub use app::App;
+pub use app::{MIN_WINDOW_SIZE, MAX_WINDOW_SIZE};
