@@ -7,14 +7,14 @@ fn main() -> eframe::Result<()> {
     env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
 
     let native_options = eframe::NativeOptions {
-        initial_window_size: Some([400.0, 300.0].into()),
-        min_window_size: Some([300.0, 220.0].into()),
+        initial_window_size: Some([670.0, 420.0].into()),
+        min_window_size: Some([650.0, 240.0].into()),
         ..Default::default()
     };
     eframe::run_native(
-        "eframe template",
+        "Micronos",
         native_options,
-        Box::new(|cc| Box::new(micronos::TemplateApp::new(cc))),
+        Box::new(|cc| Box::new(micronos::App::new(cc))),
     )
 }
 
@@ -31,7 +31,7 @@ fn main() {
             .start(
                 "the_canvas_id", // hardcode it
                 web_options,
-                Box::new(|cc| Box::new(micronos::TemplateApp::new(cc))),
+                Box::new(|cc| Box::new(micronos::App::new(cc))),
             )
             .await
             .expect("failed to start eframe");
