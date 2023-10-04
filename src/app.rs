@@ -1,3 +1,5 @@
+use crate::render_timeline;
+
 pub const MAX_WINDOW_SIZE: egui::Vec2 = egui::Vec2::new(670.0, 420.0);
 pub const MIN_WINDOW_SIZE: egui::Vec2 = egui::Vec2::new(650.0, 240.0);
 
@@ -87,7 +89,7 @@ impl eframe::App for App {
         });
 
         egui::CentralPanel::default().show(ctx, |ui: &mut egui::Ui| {
-            ui.image(egui::include_image!("../assets/SpectrumBg.png"));
+            render_timeline(ui);
         });
     }
 }
