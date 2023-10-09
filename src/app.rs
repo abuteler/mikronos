@@ -1,4 +1,4 @@
-use crate::render_timeline;
+use crate::timeline::{Timeline, Render};
 
 pub const MAX_WINDOW_SIZE: egui::Vec2 = egui::Vec2::new(670.0, 420.0);
 pub const MIN_WINDOW_SIZE: egui::Vec2 = egui::Vec2::new(650.0, 240.0);
@@ -8,6 +8,7 @@ pub struct App {
     compact_mode: bool,
     always_on_top: bool,
     window_decorations: bool,
+    timeline: Timeline,
 }
 
 impl Default for App {
@@ -17,6 +18,7 @@ impl Default for App {
             compact_mode: false,
             always_on_top: false,
             window_decorations: true,
+            timeline: Timeline::new(),
         }
     }
 }
@@ -89,7 +91,7 @@ impl eframe::App for App {
         });
 
         egui::CentralPanel::default().show(ctx, |ui: &mut egui::Ui| {
-            render_timeline(ui);
+            self.timeline.render(ui);
         });
     }
 }
