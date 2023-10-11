@@ -1,5 +1,5 @@
 use eframe::egui_glow::{painter, Painter};
-use egui::{Ui, Rect, Pos2};
+use egui::{Ui, Rect, Pos2, Widget, Response};
 
 use crate::get_rect;
 
@@ -43,15 +43,30 @@ impl Timeline {
     }
 }
 
-// impl Render for HourComponent {
-//     fn render (&self, ui: &mut Ui, rect: Rect) {
-//         let (response, painter) = ui.allocate_painter(egui::Vec2 { x: (rect.max.x - rect.min.x), y: (rect.max.y - rect.min.y) }, sense);
-//     }
-// }
+impl Widget for HourComponent {
+    fn ui (self, ui: &mut Ui) -> Response {
+        // let (response, painter) = ui.allocate_painter(egui::Vec2 { x: (rect.max.x - rect.min.x), y: (rect.max.y - rect.min.y) }, sense);
+        let painter = ui.painter();
+        painter.line_segment(points, stroke)
+
+        /*
+        pub struct Response {
+            pub ctx: Context,
+            pub layer_id: LayerId,
+            pub id: Id,
+            pub rect: Rect,
+            pub sense: Sense,
+            /* private fields */
+        }
+        */
+
+    }
+}
 
 impl Render for Timeline {
     fn render (&self, ui: &mut Ui, rect: Rect) {
         const PADDING: f32 = 0.2;
+        // ui.label(format!("rect.max.x {:}, rect.max.y {}", rect.max.x, rect.max.y));
         ui.put(rect,
             egui::Image::new(egui::include_image!("../assets/SpectrumBg.png"))
         );

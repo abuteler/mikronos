@@ -1,16 +1,16 @@
-use egui::Pos2;
+use egui::{Pos2, Color32, style};
 
 use crate::{timeline::{Timeline, Render}, get_rect};
 
-const PADDING: f32 = 7.0;
-const TOOLBAR_HEIGHT: f32 = 25.0;
+const PADDING: f32 = 10.0;
+const TOOLBAR_HEIGHT: f32 = 40.0;
 const HEADER_HEIGHT: f32 = 85.0; // TODO: block of text with customizable data
 const SPECTRUM_BG_HEIGHT: f32 = 140.0;
 const SPECTRUM_BG_WIDTH: f32 = 580.0;
 const HOURS_HEIGHT: f32 = 29.0;
 const FOOTER_HEIGHT: f32 = 25.0;
 
-pub const MAX_WINDOW_SIZE: egui::Vec2 = egui::Vec2::new(670.0, {TOOLBAR_HEIGHT+HEADER_HEIGHT+SPECTRUM_BG_HEIGHT+HOURS_HEIGHT+FOOTER_HEIGHT+PADDING*6.0});
+pub const MAX_WINDOW_SIZE: egui::Vec2 = egui::Vec2::new(770.0, {TOOLBAR_HEIGHT+HEADER_HEIGHT+SPECTRUM_BG_HEIGHT+HOURS_HEIGHT+FOOTER_HEIGHT+PADDING*6.0});
 pub const MIN_WINDOW_SIZE: egui::Vec2 = egui::Vec2::new(SPECTRUM_BG_WIDTH, {TOOLBAR_HEIGHT+SPECTRUM_BG_HEIGHT+HOURS_HEIGHT});
 
 pub struct App {
@@ -51,8 +51,15 @@ impl eframe::App for App {
         } else {
             MAX_WINDOW_SIZE
         };
-
-        egui::TopBottomPanel::top("top_panel").show(ctx, |ui| {
+        let top_frame = egui::containers::Frame {
+            inner_margin: style::Margin::ZERO,
+            outer_margin: style::Margin::same(PADDING),
+            rounding: egui::Rounding::ZERO,
+            shadow: eframe::epaint::Shadow { extrusion: 0.0, color: Color32::WHITE },
+            fill: Color32::BLACK,
+            stroke: egui::Stroke::NONE,
+        };
+        egui::TopBottomPanel::top("top_panel").frame(top_frame).show(ctx, |ui| {
             //menu bar with icons
             egui::menu::bar(ui, |ui| {
                 // left to right: toggle compact mode
@@ -100,7 +107,15 @@ impl eframe::App for App {
             });
         });
 
-        egui::CentralPanel::default().show(ctx, |ui: &mut egui::Ui| {
+        let central_frame = egui::containers::Frame {
+            inner_margin: style::Margin::ZERO,
+            outer_margin: if self.compact_mode {style::Margin::ZERO} else {style::Margin::same(PADDING)},
+            rounding: egui::Rounding::ZERO,
+            shadow: eframe::epaint::Shadow { extrusion: 0.0, color: Color32::WHITE },
+            fill: Color32::BLACK,
+            stroke: egui::Stroke::NONE,
+        };
+        egui::CentralPanel::default().frame(central_frame).show(ctx, |ui: &mut egui::Ui| {
             self.timeline.render(ui, get_rect(
                 Pos2 { x: 0.0, y: 0.0 },
                 Pos2 { x: SPECTRUM_BG_WIDTH, y: SPECTRUM_BG_HEIGHT },
