@@ -5,7 +5,7 @@ use crate::helper::get_rect_with_offset;
 
 const PADDING: f32 = 10.0;
 const TOOLBAR_HEIGHT: f32 = 40.0;
-const HEADER_HEIGHT: f32 = 85.0; // TODO: block of text with customizable data
+const HEADER_HEIGHT: f32 = 100.0; // TODO: block of text with customizable data
 const SPECTRUM_BG_HEIGHT: f32 = 140.0;
 const SPECTRUM_BG_WIDTH: f32 = 580.0;
 const HOURS_HEIGHT: f32 = 29.0;
@@ -37,7 +37,7 @@ impl Default for App {
             window_decorations: true,
             timeline: Timeline::new(),
             window_sizes: WindowSizes {
-                max: egui::Vec2::new(770.0, MAX_WINDOW_HEIGHT),
+                max: egui::Vec2::new(700.0, MAX_WINDOW_HEIGHT),
                 min: egui::Vec2::new(SPECTRUM_BG_WIDTH, MIN_WINDOW_HEIGHT),
             }
         }
@@ -49,14 +49,12 @@ impl App {
         // This is also where you can customize the look and feel of egui using
         // `cc.egui_ctx.set_visuals` and `cc.egui_ctx.set_fonts`.
         // coming soon
-
         Default::default()
     }
 }
 
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-
         let current_window_size = if self.compact_mode {
             self.window_sizes.min
         } else {
@@ -123,8 +121,8 @@ impl eframe::App for App {
             outer_margin: if self.compact_mode {style::Margin::ZERO} else {style::Margin::same(PADDING)},
             rounding: egui::Rounding::ZERO,
             shadow: eframe::epaint::Shadow { extrusion: 0.0, color: Color32::WHITE },
-            fill: Color32::BLACK,
-            stroke: egui::Stroke::NONE,
+            fill: Color32::GRAY,
+            stroke: egui::Stroke::new(2., Color32::YELLOW),
         };
         egui::CentralPanel::default().frame(central_frame).show(ctx, |ui: &mut egui::Ui| {
             let timeline_canvas = get_rect_with_offset(

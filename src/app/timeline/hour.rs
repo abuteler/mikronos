@@ -1,4 +1,4 @@
-use egui::{Widget, Rect, Ui, Response, Sense, Pos2, Stroke, Color32};
+use egui::{Widget, Rect, Ui, Response, Sense, Pos2, Stroke, Color32, Align2, FontId};
 
 #[derive(Clone, Default)]
 pub struct HourComponent {
@@ -27,25 +27,15 @@ impl Widget for HourComponent {
                 egui::Vec2 { x: (canvas.max.x - canvas.min.x), y: (canvas.max.y - canvas.min.y) },
                 Sense::hover()
             );
-        // let painter = ui.painter();
         let line_start = Pos2 { x: canvas.min.x, y: canvas.min.y };
-        let line_end = Pos2 { x: canvas.max.x, y: canvas.min.y };
+        let line_end = Pos2 { x: canvas.max.x-4., y: canvas.min.y };
         painter.line_segment([line_start, line_end], Stroke {
-            width: 2.0,
+            width: 3.0,
             color: Color32::WHITE
         });
-        // painter.add(Shape::text(canvas.center(), pos, Align2::CENTER_CENTER, text, font_id, color));
+        let horizontal_offset = (line_end.x - line_start.x)/2.;
+        painter.text(Pos2 { x: line_start.x + horizontal_offset, y: line_start.y+8. }, Align2::CENTER_TOP, label, FontId::proportional(16.), Color32::WHITE);
         
-        /*
-        pub struct Response {
-            pub ctx: Context,
-            pub layer_id: LayerId,
-            pub id: Id,
-            pub rect: Rect,
-            pub sense: Sense,
-            /* private fields */
-        }
-        */
         response
     }
 }

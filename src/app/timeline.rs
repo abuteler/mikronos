@@ -42,14 +42,14 @@ impl Timeline {
 
 impl Render for Timeline {
     fn render (&mut self, ui: &mut Ui) {
-        const PADDING: f32 = 0.2;
+        const PADDING: f32 = 1.;
         let canvas = self.canvas.unwrap();
         // ui.label(format!("rect.max.x {:}, rect.max.y {}", rect.max.x, rect.max.y));
         ui.put(canvas,
             egui::Image::new(egui::include_image!("../../assets/SpectrumBg.png"))
         );
 
-        let hour_component_width: f32 = (canvas.max.x - PADDING * 22.0) / 24.0;
+        let hour_component_width: f32 = (canvas.max.x - PADDING * 24.0) / 24.0;
         let hour_component_height: f32 = 29.0;
 
         // TODO: implement chronos or similar.
@@ -58,23 +58,20 @@ impl Render for Timeline {
         // ui.label(format!("time pre: {:?}", self.time_slots[3].time.unwrap()));
         // ui.label(format!("is_none canvas: {:?}", self.canvas.is_none() ));
 
-        // let owned = self.time_slots.as_mut_slice();
         for slot in self.time_slots.as_mut_slice() {
-            // if slot.time == Some(3) { slot.time = Some(42)}
-            let time = slot.time.unwrap();
-            let start: f32 = (hour_component_width + PADDING) * time as f32 ;
-            let end: f32 = (hour_component_width + PADDING) * (time+1) as f32;
+            let number = slot.time.unwrap();
+            let start: f32 = (hour_component_width + PADDING) * number as f32 ;
+            let end: f32 = (hour_component_width + PADDING) * (number+1) as f32;
             let hour_canvas = get_rect_with_offset(
                 Pos2 { x: start, y: 0.0 },
                 Pos2 { x: end, y: hour_component_height },
-                Pos2 { x: PADDING*time as f32, y: PADDING + canvas.max.y }
+                Pos2 { x: PADDING*number as f32, y: PADDING + canvas.max.y }
             );
             slot.set_canvas(hour_canvas);
             ui.put(
-                    hour_canvas,
-                    slot.clone()
-                );
-            
+                hour_canvas,
+                slot.clone()
+            );
         }
 
         // ui.label(format!("time post: {:?}", self.time_slots[3].time.unwrap()));
