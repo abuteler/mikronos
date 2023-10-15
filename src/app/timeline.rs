@@ -1,3 +1,4 @@
+use time::OffsetDateTime;
 mod hour;
 use egui::{Ui, Rect, Pos2};
 use hour::HourComponent;
@@ -42,8 +43,14 @@ impl Timeline {
 
 impl Render for Timeline {
     fn render (&mut self, ui: &mut Ui, compact: bool) {
+
+        let now = OffsetDateTime::now_local().unwrap().time();
+        let current_hour = now.hour();
+        let current_mins = now.minute();
+
+        ui.label(format!("now: {}:{}", current_hour, current_mins));
+
         let canvas = self.canvas.unwrap();
-        // ui.label(format!("rect.max.x {:}, rect.max.y {}", rect.max.x, rect.max.y));
         ui.put(canvas,
             egui::Image::new(egui::include_image!("../../assets/SpectrumBg.png"))
         );
@@ -74,7 +81,6 @@ impl Render for Timeline {
                 slot.clone()
             );
         }
-
         // ui.label(format!("time post: {:?}", self.time_slots[3].time.unwrap()));
 
         // if slot.current {
