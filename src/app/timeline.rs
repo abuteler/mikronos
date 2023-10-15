@@ -1,7 +1,7 @@
 mod hour;
 use egui::{Ui, Rect, Pos2};
 use hour::HourComponent;
-use crate::helper::get_rect_with_offset;
+use crate::{helper::get_rect_with_offset, PADDING};
 
 
 enum TimeFormat {
@@ -10,7 +10,7 @@ enum TimeFormat {
 }
 
 pub trait Render {
-    fn render (&mut self, ui: &mut Ui);
+    fn render (&mut self, ui: &mut Ui, compact: bool);
 }
 
 pub struct Timeline {
@@ -41,16 +41,16 @@ impl Timeline {
 }
 
 impl Render for Timeline {
-    fn render (&mut self, ui: &mut Ui) {
-        const PADDING: f32 = 1.;
+    fn render (&mut self, ui: &mut Ui, compact: bool) {
         let canvas = self.canvas.unwrap();
         // ui.label(format!("rect.max.x {:}, rect.max.y {}", rect.max.x, rect.max.y));
         ui.put(canvas,
             egui::Image::new(egui::include_image!("../../assets/SpectrumBg.png"))
         );
 
-        let hour_component_width: f32 = (canvas.max.x - PADDING * 24.0) / 24.0;
-        let hour_component_height: f32 = 29.0;
+        const GAP: f32 = 1.;
+        let hour_component_width: f32 = canvas.max.x/ 24.0 - GAP*2. ;
+        let hour_component_height: f32 = 30.0;
 
         // TODO: implement chronos or similar.
         // Cursor, current, etc ...
@@ -60,12 +60,13 @@ impl Render for Timeline {
 
         for slot in self.time_slots.as_mut_slice() {
             let number = slot.time.unwrap();
-            let start: f32 = (hour_component_width + PADDING) * number as f32 ;
-            let end: f32 = (hour_component_width + PADDING) * (number+1) as f32;
+            let left_offset: f32 = if compact { 0. } else { PADDING }; 
+            let start: f32 = (hour_component_width + GAP) * number as f32 ;
+            let end: f32 = (hour_component_width + GAP) * (number+1) as f32;
             let hour_canvas = get_rect_with_offset(
                 Pos2 { x: start, y: 0.0 },
                 Pos2 { x: end, y: hour_component_height },
-                Pos2 { x: PADDING*number as f32, y: PADDING + canvas.max.y }
+                Pos2 { x: left_offset + GAP*number as f32, y: GAP + canvas.max.y }
             );
             slot.set_canvas(hour_canvas);
             ui.put(
