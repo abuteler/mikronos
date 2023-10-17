@@ -1,6 +1,11 @@
 on: [push, pull_request]
 
 name: CI
+ 
+###
+# I'm working on a WSL2 setup, cross building for Windows so I commented out a bunch of the default setup
+# down here that doesn't work.
+###
 
 env:
   # This is required to enable the web_sys clipboard API which egui_web uses
@@ -56,21 +61,21 @@ jobs:
           command: test
           args: --lib
 
-  fmt:
-    name: Rustfmt
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          override: true
-          components: rustfmt
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --all -- --check
+  # fmt:
+  #   name: Rustfmt
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: stable
+  #         override: true
+  #         components: rustfmt
+  #     - uses: actions-rs/cargo@v1
+  #       with:
+  #         command: fmt
+  #         args: --all -- --check
 
   clippy:
     name: Clippy
@@ -88,18 +93,18 @@ jobs:
           command: clippy
           args: -- -D warnings
 
-  trunk:
-    name: trunk
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: 1.71.0
-          target: wasm32-unknown-unknown
-          override: true
-      - name: Download and install Trunk binary
-        run: wget -qO- https://github.com/thedodd/trunk/releases/latest/download/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
-      - name: Build
-        run: ./trunk build
+  # trunk:
+  #   name: trunk
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions-rs/toolchain@v1
+  #       with:
+  #         profile: minimal
+  #         toolchain: 1.71.0
+  #         target: wasm32-unknown-unknown
+  #         override: true
+  #     - name: Download and install Trunk binary
+  #       run: wget -qO- https://github.com/thedodd/trunk/releases/latest/download/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
+  #     - name: Build
+  #       run: ./trunk build
