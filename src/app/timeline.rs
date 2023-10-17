@@ -15,7 +15,7 @@ pub trait Render {
 }
 
 pub struct Timeline {
-    time_format: TimeFormat,
+    _time_format: TimeFormat,
     time_slots: [HourComponent; 24], //to revise in future https://stackoverflow.com/questions/26757355/how-do-i-collect-into-an-array
     canvas: Option<Rect>
 }
@@ -25,7 +25,7 @@ impl Default for Timeline {
         let v: Vec<HourComponent> = (0..24).map(HourComponent::new).collect();
         let a: Result<[HourComponent;24], _> = v.try_into();
         Self {
-            time_format: TimeFormat::Continuous,
+            _time_format: TimeFormat::Continuous,
             time_slots: a.ok().unwrap(),
             canvas: None
         }
