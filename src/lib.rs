@@ -1,5 +1,8 @@
 #![warn(clippy::all, rust_2018_idioms)]
 
-mod app;
+mod app;    
+pub mod helper;
+
 pub use app::App;
-pub use app::{MIN_WINDOW_SIZE, MAX_WINDOW_SIZE};
+
+pub const PADDING: f32 = 10.;

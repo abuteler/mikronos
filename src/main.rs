@@ -8,15 +8,18 @@ fn main() -> eframe::Result<()> {
     env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
 
     let native_options = eframe::NativeOptions {
-        initial_window_size: Some(micronos::MAX_WINDOW_SIZE),
-        max_window_size: Some(micronos::MAX_WINDOW_SIZE),
-        min_window_size: Some(micronos::MIN_WINDOW_SIZE),
+        initial_window_size: Some(micronos::App::default().window_sizes.max),
+        max_window_size: Some(micronos::App::default().window_sizes.max),
+        min_window_size: Some(micronos::App::default().window_sizes.min),
         ..Default::default()
     };
     eframe::run_native(
         "Micronos",
         native_options,
-        Box::new(|cc| Box::new(micronos::App::new(cc))),
+        Box::new(|cc| {
+            egui_extras::install_image_loaders(&cc.egui_ctx);
+            Box::new(micronos::App::new(cc))
+        }),
     )
 }
 

@@ -14,7 +14,10 @@ eframe = { version = "0.23.0", default-features = false, features = [
     "glow",          # Use the glow rendering backend. Alternative: "wgpu".
     # "persistence",   # Enable restoring app state when restarting the app.
 ] }
+egui_extras = { version = "0.23", features = ["all_loaders"] }
+image = { version = "0.24", features = ["png"] } # Add the types you want support for
 log = "0.4"
+time = { version = "0.3.30", features = ["local-offset"] }
 
 # You only need serde if you want app persistence:
 serde = { version = "1", features = ["derive"] }
@@ -24,8 +27,8 @@ serde = { version = "1", features = ["derive"] }
 env_logger = "0.10"
 
 # web:
-[target.'cfg(target_arch = "wasm32")'.dependencies]
-wasm-bindgen-futures = "0.4"
+#[target.'cfg(target_arch = "wasm32")'.dependencies]
+#wasm-bindgen-futures = "0.4"
 
 
 [profile.release]
