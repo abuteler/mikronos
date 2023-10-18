@@ -1,5 +1,5 @@
-mod timeline;
 use egui::{Pos2, Color32, style};
+mod timeline;
 use timeline::{Timeline, Render};
 use crate::{helper::get_rect_with_offset, PADDING};
 
@@ -10,8 +10,8 @@ const SPECTRUM_BG_WIDTH: f32 = 580.0;
 const HOURS_HEIGHT: f32 = 30.0;
 const FOOTER_HEIGHT: f32 = 30.0;
 
-const MAX_WINDOW_HEIGHT: f32 = TOOLBAR_HEIGHT+HEADER_HEIGHT+SPECTRUM_BG_HEIGHT+HOURS_HEIGHT+FOOTER_HEIGHT+PADDING;
-const MIN_WINDOW_HEIGHT: f32 = TOOLBAR_HEIGHT+SPECTRUM_BG_HEIGHT+HOURS_HEIGHT;
+const MAX_WINDOW_HEIGHT: f32 = TOOLBAR_HEIGHT+HEADER_HEIGHT+SPECTRUM_BG_HEIGHT+HOURS_HEIGHT+PADDING+FOOTER_HEIGHT;
+const MIN_WINDOW_HEIGHT: f32 = TOOLBAR_HEIGHT+PADDING+SPECTRUM_BG_HEIGHT+HOURS_HEIGHT+PADDING;
 
 pub struct WindowSizes {
     pub max: egui::Vec2,
@@ -37,7 +37,7 @@ impl Default for App {
             timeline: Timeline::new(),
             window_sizes: WindowSizes {
                 max: egui::Vec2::new(700.0, MAX_WINDOW_HEIGHT),
-                min: egui::Vec2::new(SPECTRUM_BG_WIDTH, MIN_WINDOW_HEIGHT),
+                min: egui::Vec2::new(SPECTRUM_BG_WIDTH+PADDING*2., MIN_WINDOW_HEIGHT),
             }
         }
     }
@@ -123,18 +123,19 @@ impl eframe::App for App {
             shadow: eframe::epaint::Shadow { extrusion: 0.0, color: Color32::WHITE },
             fill: Color32::BLACK,
             stroke: egui::Stroke::NONE,
+            // stroke: egui::Stroke::new(1., Color32::GOLD),
         };
         egui::CentralPanel::default().frame(central_frame).show(ctx, |ui: &mut egui::Ui| {
             let timeline_canvas = get_rect_with_offset(
                 Pos2 { x: 0.0, y: 0.0 },
                 Pos2 { x: SPECTRUM_BG_WIDTH, y: SPECTRUM_BG_HEIGHT },
                 Pos2 {
-                    x: if self.compact_mode { 0.0 } else { PADDING },
+                    x: PADDING,
                     y: if self.compact_mode { TOOLBAR_HEIGHT } else { TOOLBAR_HEIGHT + HEADER_HEIGHT }
                 }
             );
             self.timeline.set_canvas(timeline_canvas);
-            self.timeline.render(ui, self.compact_mode);
+            self.timeline.render(ui);
             ui.add_space(PADDING);
             // TODO: Footer with links and credits.
             ui.label("Footer.")
