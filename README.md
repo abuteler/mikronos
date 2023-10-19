@@ -7,7 +7,7 @@
 A cross-platform time-awareness-and-management Windows-first GUI application written in Rust, and meant first and mostly to be used as an overlay desktop app to help with the aforementioned purpose.
 
 ## Setup
-This project was jump-started by way of [egui's](https://github.com/emilk/egui/) [eframe](https://github.com/emilk/egui/tree/master/crates/eframe) template.
+This project was jump-started by way of [egui](https://github.com/emilk/egui/)'s [eframe](https://github.com/emilk/egui/tree/master/crates/eframe) template.
 
 
 ## Testing locally
