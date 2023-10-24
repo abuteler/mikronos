@@ -3,6 +3,7 @@
 [![dependency status](https://deps.rs/repo/github/abuteler/micronos/status.svg)](https://deps.rs/repo/github/abuteler/micronos/)
 [![Build Status](https://github.com/abuteler/micronos/workflows/CI/badge.svg)](https://github.com/abuteler/micronos/actions?workflow=CI)
 
+Lost traction? Lost grip of time? Reset. Start anywhere. Start somewhere.
 
 A cross-platform time-awareness-and-management Windows-first GUI application written in Rust, and meant first and mostly to be used as an overlay desktop app to help with the aforementioned purpose.
 

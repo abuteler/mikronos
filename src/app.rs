@@ -10,8 +10,11 @@ const SPECTRUM_BG_WIDTH: f32 = 580.0;
 const HOURS_HEIGHT: f32 = 30.0;
 const FOOTER_HEIGHT: f32 = 30.0;
 
-const MAX_WINDOW_HEIGHT: f32 = TOOLBAR_HEIGHT+HEADER_HEIGHT+SPECTRUM_BG_HEIGHT+HOURS_HEIGHT+PADDING+FOOTER_HEIGHT;
-const MIN_WINDOW_HEIGHT: f32 = TOOLBAR_HEIGHT+PADDING+SPECTRUM_BG_HEIGHT+HOURS_HEIGHT+PADDING;
+const TOP_FRAME_HEIGHT: f32 = TOOLBAR_HEIGHT;
+const CENTRAL_FRAME_HEIGHT_NORMAL: f32 = HEADER_HEIGHT+SPECTRUM_BG_HEIGHT+HOURS_HEIGHT+PADDING+FOOTER_HEIGHT;
+const CENTRAL_FRAME_HEIGHT_COMPACT: f32 = SPECTRUM_BG_HEIGHT+HOURS_HEIGHT;
+const MAX_WINDOW_HEIGHT: f32 = TOP_FRAME_HEIGHT+CENTRAL_FRAME_HEIGHT_NORMAL;
+const MIN_WINDOW_HEIGHT: f32 = TOP_FRAME_HEIGHT+CENTRAL_FRAME_HEIGHT_COMPACT;
 
 pub struct WindowSizes {
     pub max: egui::Vec2,
@@ -31,7 +34,7 @@ impl Default for App {
     fn default() -> Self {
         Self { 
             weekday: "Tuesday".to_string(),
-            compact_mode: false,
+            compact_mode: true,
             always_on_top: false,
             window_decorations: true,
             timeline: Timeline::new(),
@@ -136,9 +139,9 @@ impl eframe::App for App {
             );
             self.timeline.set_canvas(timeline_canvas);
             self.timeline.render(ui);
-            ui.add_space(PADDING);
+            // ui.add_space(PADDING);
             // TODO: Footer with links and credits.
-            ui.label("Footer.")
+            // ui.label("Footer.")
         });
     }
 }
