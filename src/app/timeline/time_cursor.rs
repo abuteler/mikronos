@@ -4,9 +4,9 @@ use crate::PADDING;
 
 #[derive(Clone, Default)]
 pub struct Cursor {
-    pub canvas: Option<Rect>,
-    // hour: Option<u8>,
+    pub hour: Option<u8>,
     pub minutes: Option<u8>,
+    pub canvas: Option<Rect>,
     width: f32,
     height: f32,
 }

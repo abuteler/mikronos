@@ -1,4 +1,7 @@
+use std::time::Duration;
+
 use egui::{Pos2, Color32, style};
+use time::OffsetDateTime;
 mod timeline;
 use timeline::{Timeline, Render};
 use crate::{helper::get_rect_with_offset, PADDING};
@@ -57,6 +60,8 @@ impl App {
 
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
+        let now = OffsetDateTime::now_local().unwrap();
+        self.weekday = now.weekday().to_string();
         let current_window_size = if self.compact_mode {
             self.window_sizes.min
         } else {
@@ -71,9 +76,9 @@ impl eframe::App for App {
             stroke: egui::Stroke::NONE,
         };
         egui::TopBottomPanel::top("top_panel").frame(top_frame).show(ctx, |ui| {
-            //menu bar with icons
+            // Menu bar with icons
             egui::menu::bar(ui, |ui| {
-                // left to right: toggle compact mode
+                // Left to right: toggle compact mode
                 ui.with_layout(egui::Layout::left_to_right(egui::Align::LEFT), |ui: &mut egui::Ui| {
                     if ui.add(egui::Button::new({
                         if self.compact_mode {
@@ -91,7 +96,7 @@ impl eframe::App for App {
                     };
                     ui.label(&self.weekday);
                 });
-                // right to left: toggle window decoration, toggle always on top
+                // Right to left: toggle window decoration, toggle always on top
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::RIGHT), |ui: &mut egui::Ui| {
                     if ui.add(egui::Button::new({
                         if self.window_decorations {
@@ -129,6 +134,11 @@ impl eframe::App for App {
             // stroke: egui::Stroke::new(1., Color32::GOLD),
         };
         egui::CentralPanel::default().frame(central_frame).show(ctx, |ui: &mut egui::Ui| {
+            // Set current time
+            self.timeline.cursor.hour = Some(now.time().hour());
+            self.timeline.cursor.minutes = Some(now.time().minute());
+
+            // Insert Timeline component
             let timeline_canvas = get_rect_with_offset(
                 Pos2 { x: 0.0, y: 0.0 },
                 Pos2 { x: SPECTRUM_BG_WIDTH, y: SPECTRUM_BG_HEIGHT },
@@ -139,9 +149,12 @@ impl eframe::App for App {
             );
             self.timeline.set_canvas(timeline_canvas);
             self.timeline.render(ui);
+
+            // Footer with links and credits
+            // to be continued
             // ui.add_space(PADDING);
-            // TODO: Footer with links and credits.
             // ui.label("Footer.")
         });
+        ctx.request_repaint_after(Duration::from_secs(240));
     }
 }
