@@ -3,7 +3,7 @@
 [![dependency status](https://deps.rs/repo/github/abuteler/micronos/status.svg)](https://deps.rs/repo/github/abuteler/micronos/)
 [![Build Status](https://github.com/abuteler/micronos/workflows/CI/badge.svg)](https://github.com/abuteler/micronos/actions?workflow=CI)
 
-Lost traction? Lost grip of time? Reset. Start anywhere. Start somewhere.
+'***Lost traction? Lost grip of time? Reset. Start anywhere. Start somewhere.***'
 
 A cross-platform time-awareness-and-management Windows-first GUI application written in Rust, and meant first and mostly to be used as an overlay desktop app to help with the aforementioned purpose.
 
@@ -20,8 +20,11 @@ Beyond following the regular rust installation movements, if you're also under W
 
 ## Preview
 
-This is how the app looks and runs at this point in time:
+This is how the app looks and runs at this point in time (25th October 2023):
 
-{screen-record capture here}
+https://github.com/abuteler/micronos/assets/2902419/271df514-134e-442b-8597-95f1a7fc164a
 
-(TBC)
+
+
+This is a work in progress, the README, as well as the project.
+To be continued...
