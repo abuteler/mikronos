@@ -8,7 +8,7 @@ fn main() -> eframe::Result<()> {
     env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
 
     let native_options = eframe::NativeOptions {
-        initial_window_size: Some(micronos::App::default().window_sizes.max),
+        initial_window_size: Some(micronos::App::default().window_sizes.min),
         max_window_size: Some(micronos::App::default().window_sizes.max),
         min_window_size: Some(micronos::App::default().window_sizes.min),
         ..Default::default()
