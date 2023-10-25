@@ -1,5 +1,4 @@
 use egui::{Ui, Rect, Pos2};
-use time::OffsetDateTime;
 use crate::{helper::get_rect_with_offset, PADDING};
 mod time_cursor;
 use time_cursor::Cursor;
@@ -18,10 +17,10 @@ pub trait Render {
 }
 
 pub struct Timeline {
+    pub cursor: Cursor,
+    canvas: Option<Rect>,
     _time_format: TimeFormat,
     time_slots: [HourComponent; 24], //to revise in future https://stackoverflow.com/questions/26757355/how-do-i-collect-into-an-array
-    canvas: Option<Rect>,
-    cursor: Cursor,
 }
 
 impl Default for Timeline {
@@ -49,10 +48,6 @@ impl Timeline {
 impl Render for Timeline {
     fn render(&mut self, ui: &mut Ui) {
         let bg_canvas = self.canvas.unwrap();
-
-        let now = OffsetDateTime::now_local().unwrap().time();
-        let current_hour = now.hour();
-        let current_mins = now.minute();
 
         // ui.label(format!("now: {}:{}", current_hour, current_mins));
         // ui.label(format!("variable: {:?}", variable));
@@ -82,12 +77,11 @@ impl Render for Timeline {
                 slot.clone()
             );
 
-            if val == current_hour {
+            if val == self.cursor.hour.unwrap() {
                 self.cursor.set_canvas(Rect {
                     min: Pos2 { x: hour_canvas.min.x, y: bg_canvas.min.y },
                     max: Pos2 { x: hour_canvas.max.x, y: bg_canvas.max.y },
                 });
-                self.cursor.minutes = Some(current_mins);
             }
         }
 
