@@ -24,6 +24,7 @@ fn main() -> eframe::Result<()> {
 }
 
 // When compiling to web using trunk:
+/*
 #[cfg(target_arch = "wasm32")]
 fn main() {
     // Redirect `log` message to `console.log` and friends:
@@ -42,3 +43,4 @@ fn main() {
             .expect("failed to start eframe");
     });
 }
+ */
