@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use egui::{Pos2, Color32, style};
-use time::OffsetDateTime;
+use time::{OffsetDateTime, UtcOffset};
 mod timeline;
 use timeline::{Timeline, Render};
 use crate::{helper::get_rect_with_offset, PADDING};
@@ -60,7 +60,14 @@ impl App {
 
 impl eframe::App for App {
     fn update(&mut self, ctx: &egui::Context, frame: &mut eframe::Frame) {
-        let now = OffsetDateTime::now_local().unwrap();
+        let now = match OffsetDateTime::now_local() {
+                Ok(val) => val,
+                Err(_) => OffsetDateTime::now_utc().to_offset(
+                    UtcOffset::from_hms(-3, 0, 0).expect(
+                        "IndeterminateOffset for `now_local()`, plus manual setting of offset did not work."
+                    )
+                ),
+        };
         self.weekday = now.weekday().to_string();
         let current_window_size = if self.compact_mode {
             self.window_sizes.min

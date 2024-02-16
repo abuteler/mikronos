@@ -17,7 +17,7 @@ eframe = { version = "0.23.0", default-features = false, features = [
 egui_extras = { version = "0.23", features = ["all_loaders"] }
 image = { version = "0.24", features = ["png"] } # Add the types you want support for
 log = "0.4"
-time = { version = "0.3.30", features = ["local-offset"] }
+time = { version = "0.3.34", features = ["local-offset"] }
 
 # You only need serde if you want app persistence:
 serde = { version = "1", features = ["derive"] }
