@@ -1,46 +1,79 @@
-
-#![warn(clippy::all, rust_2018_idioms)]
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-
-// When compiling natively:
-#[cfg(not(target_arch = "wasm32"))]
-fn main() -> eframe::Result<()> {
-    env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
-
-    let native_options = eframe::NativeOptions {
-        initial_window_size: Some(micronos::App::default().window_sizes.min),
-        max_window_size: Some(micronos::App::default().window_sizes.max),
-        min_window_size: Some(micronos::App::default().window_sizes.min),
-        ..Default::default()
-    };
-    eframe::run_native(
-        "Micronos",
-        native_options,
-        Box::new(|cc| {
-            egui_extras::install_image_loaders(&cc.egui_ctx);
-            Box::new(micronos::App::new(cc))
-        }),
-    )
+use bevy::{prelude::*, window::{WindowResized, WindowResolution, WindowTheme, EnabledButtons}};
+use micronos::timeline::TimelinePlugin;
+fn main() {
+    App::new()
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+          primary_window: Some(Window {
+              title: "micronos".into(),
+              name: Some("micronos".into()),
+              resolution: WindowResolution::new(600., 208.).with_scale_factor_override(1.0),
+              window_theme: Some(WindowTheme::Dark),
+              decorations: true,
+              transparent: true,
+              enabled_buttons: EnabledButtons {
+                minimize: false,
+                maximize: false,
+                close: false,
+              },
+              ..default()
+            }),
+            ..default()
+          }))
+        // ClearColor must have 0 alpha, otherwise some color will bleed through
+        .insert_resource(ClearColor(Color::NONE))
+        .add_plugins(TimelinePlugin)
+        .add_systems(Startup, (setup_camera, setup_ui))
+        .add_systems(Update, on_resize_system)
+        .run();
 }
 
-// When compiling to web using trunk:
-/*
-#[cfg(target_arch = "wasm32")]
-fn main() {
-    // Redirect `log` message to `console.log` and friends:
-    eframe::WebLogger::init(log::LevelFilter::Debug).ok();
+/// Marker component for the text that displays the current resolution.
+#[derive(Component)]
+struct ResolutionText;
 
-    let web_options = eframe::WebOptions::default();
+// Spawns the camera that draws UI
+fn setup_camera(mut cmd: Commands) {
+    cmd.spawn(Camera2dBundle::default());
+}
 
-    wasm_bindgen_futures::spawn_local(async {
-        eframe::WebRunner::new()
-            .start(
-                "the_canvas_id", // hardcode it
-                web_options,
-                Box::new(|cc| Box::new(micronos::App::new(cc))),
-            )
-            .await
-            .expect("failed to start eframe");
+// Spawns the UI
+fn setup_ui(mut cmd: Commands) {
+  // Node that fills entire background
+  cmd.spawn(NodeBundle {
+      style: Style {
+          width: Val::Percent(100.),
+          ..default()
+      },
+      ..default()
+  })
+  .with_children(|root| {
+      // Text where we display current resolution
+      root.spawn((
+          TextBundle::from_section(
+              "Resolution",
+              TextStyle {
+                  font_size: 50.0,
+                  ..default()
+              },
+          ),
+          ResolutionText,
+      ));
     });
 }
- */
+
+fn toggle_window_decorations(mut window: Query<&mut Window>) {
+  window.single_mut().decorations = !window.single_mut().decorations;
+}
+
+/// This system shows how to respond to a window being resized.
+/// Whenever the window is resized, the text will update with the new resolution.
+fn on_resize_system(
+    mut q: Query<&mut Text, With<ResolutionText>>,
+    mut resize_reader: EventReader<WindowResized>,
+) {
+    let mut text = q.single_mut();
+    for e in resize_reader.read() {
+        // When resolution is being changed
+        text.sections[0].value = format!("{:.1} x {:.1}", e.width, e.height);
+    }
+}
