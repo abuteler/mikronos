@@ -1,2 +1,2 @@
-pub mod timeline;
+pub mod plugins;
 pub mod resources;

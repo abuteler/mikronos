@@ -4,9 +4,9 @@ use systems::load_bg;
 
 use bevy::prelude::*;
 
-pub struct TimelinePlugin;
+pub struct Timeline;
 
-impl Plugin for TimelinePlugin {
+impl Plugin for Timeline {
   fn build(&self, app: &mut App) {
     app.add_systems(Startup, load_bg);
   }

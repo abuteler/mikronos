@@ -5,7 +5,7 @@ use bevy::{
     },
     winit::WinitSettings,
 };
-use micronos::{resources::ChronoSphere, timeline::TimelinePlugin};
+use micronos::{resources::ChronoSphere, plugins::Timeline};
 
 // MEMO: ECS (Entity Component System)
     // Entities are ids u32 (+ generation #)
@@ -38,8 +38,8 @@ fn main() {
     // ClearColor must have 0 alpha, otherwise some color will bleed through
     .insert_resource(ClearColor(Color::NONE))
     .insert_resource(ChronoSphere::new())
-    .add_plugins(TimelinePlugin)
-    .add_systems(Startup, (setup_camera, setup_ui))
+    .add_plugins(Timeline)
+    .add_systems(Startup, (setup_camera, setup_resolution_ui, setup_chronos_ui))
     .add_systems(Update, on_resize_system)
     .add_systems(Update, print_chrono_sphere)
     .run();
@@ -57,39 +57,53 @@ fn setup_camera(mut cmd: Commands) {
     cmd.spawn(Camera2dBundle::default());
 }
 
-// Spawns the UI
-fn setup_ui(mut cmd: Commands) {
+fn setup_resolution_ui(mut cmd: Commands) {
   // Node that fills entire background
   cmd.spawn(NodeBundle {
       style: Style {
-          width: Val::Percent(100.),
+          width: Val::Percent(50.),
+          height: Val::Percent(10.),
           ..default()
       },
       ..default()
   })
   .with_children(|root| {
-      // Text where we display current resolution
-      root.spawn((
-          TextBundle::from_section(
-              "Resolution",
-              TextStyle {
-                  font_size: 50.0,
-                  ..default()
-              },
-          ),
-          ResolutionText,
-      ));
-      root.spawn((
-          TextBundle::from_section(
-              "CurrentTime",
-              TextStyle {
-                  font_size: 50.0,
-                  ..default()
-              },
-          ),
-          CurrentTimeText,
-      ));
-    });
+    // Text where we display current resolution
+    root.spawn((
+      TextBundle::from_section(
+        "Resolution",
+        TextStyle {
+          font_size: 18.0,
+          ..default()
+        },
+      ),
+      ResolutionText,
+    ));
+  });
+}
+
+fn setup_chronos_ui(mut cmd: Commands) {
+  // Node that fills entire background
+  cmd.spawn(NodeBundle {
+      style: Style {
+          width: Val::Percent(50.),
+          ..default()
+      },
+      ..default()
+  })
+  .with_children(|root| {
+    // Text where we display current resolution
+    root.spawn((
+      TextBundle::from_section(
+        "CurrentTime",
+        TextStyle {
+          font_size: 24.0,
+          ..default()
+        },
+      ),
+      CurrentTimeText,
+    ));
+  });
 }
 
 fn toggle_window_decorations(mut window: Query<&mut Window>) {
@@ -114,5 +128,5 @@ fn print_chrono_sphere(
     chrono: Res<ChronoSphere>
 ) {
     let mut text = q.single_mut();
-    text.sections[0].value = format!("now {:?} x {:.1}", chrono.now, chrono.weekday);
+    text.sections[0].value = format!("now {:?} x {:?}", chrono.now, chrono.weekday);
 }
