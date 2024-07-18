@@ -5,7 +5,7 @@ use bevy::{
     },
     winit::WinitSettings,
 };
-use micronos::{plugins::Timeline, resources::ChronoSphere, systems::print_chrono_sphere};
+use micronos::{plugins::Timeline, resources::ChronoSphere};
 
 fn main() {
   App::new()
@@ -13,7 +13,7 @@ fn main() {
       primary_window: Some(Window {
         title: "micronos".into(),
         name: Some("micronos".into()),
-        resolution: WindowResolution::new(700., 208.).with_scale_factor_override(1.0),
+        resolution: WindowResolution::new(850., 450.).with_scale_factor_override(1.0),
         window_theme: Some(WindowTheme::Dark),
         decorations: true,
         transparent: true,
@@ -33,15 +33,11 @@ fn main() {
     .insert_resource(ChronoSphere::new())
     .add_plugins(Timeline)
     .add_systems(Startup, setup_camera)
-    .add_systems(Update, print_chrono_sphere)
+    // .add_systems(Update, print_chrono_sphere)
     .run();
 }
 
 // Spawns the camera that draws UI
 fn setup_camera(mut cmd: Commands) {
     cmd.spawn(Camera2dBundle::default());
-}
-
-fn _toggle_window_decorations(mut window: Query<&mut Window>) {
-  window.single_mut().decorations = !window.single_mut().decorations;
 }
