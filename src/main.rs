@@ -22,7 +22,7 @@ fn main() {
         name: Some("micronos".into()),
         resolution: WindowResolution::new(850., 450.).with_scale_factor_override(1.0),
         window_theme: Some(WindowTheme::Dark),
-        decorations: true,
+        decorations: false,
         transparent: true,
         window_level: WindowLevel::AlwaysOnTop,
         enabled_buttons: EnabledButtons {

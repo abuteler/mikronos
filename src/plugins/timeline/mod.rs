@@ -2,10 +2,8 @@ pub mod components;
 pub mod resources;
 mod systems;
 
-use systems::layout::{
-  spawn_ui,
-  update_active_hour,
-};
+use systems::layout::spawn_ui;
+use systems::timeline::update_active_hour;
 use resources::TimelineAssets;
 use bevy::prelude::*;
 

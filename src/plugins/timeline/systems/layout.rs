@@ -4,18 +4,16 @@ use crate::resources::ChronoSphere;
 use crate::systems::get_chrono_sphere_hh;
 
 use super::components::{Active, CurrentTimeText, Hour};
-use super::ui_bundles::{
+use super::layout_bundles::{
   create_app_grid_bundle,
   create_empty_grid_area,
-  create_top_bar_grid_area,
+  create_topbar_grid_area,
   create_timeline_header_grid_area,
   create_timeline_body_grid_area,
   create_side_panel_grid_area,
-  create_timeline_col_container,
-  create_timeline_hours_row_container,
-  create_timeline_hour_outer,
-  create_timeline_hour_inner,
 };
+use super::topbar::spawn_topbar_contents;
+use super::timeline::spawn_timeline_body_contents;
 
 pub fn spawn_ui(mut cmd: Commands, asset_server: Res<AssetServer>) {
   let font = asset_server.load("fonts/FiraSans-Bold.ttf");
@@ -24,11 +22,9 @@ pub fn spawn_ui(mut cmd: Commands, asset_server: Res<AssetServer>) {
   // Col 1 row 1
   let empty_row = cmd.spawn(create_empty_grid_area()).id();
   // Col 1 row 2
-  let top_bar = cmd.spawn(create_top_bar_grid_area())
-    .with_children(|builder| {
-        spawn_nested_text_bundle(builder, font.clone(), "Micronos", 18.)
-      })
-    .id();
+  let topbar = cmd.spawn(create_topbar_grid_area()).id();
+  let topbar_contents = spawn_topbar_contents(&mut cmd, &asset_server);
+  cmd.entity(topbar).push_children(&[topbar_contents]);
   // Col 1 row 3
   let timeline_header = cmd.spawn(create_timeline_header_grid_area())
     .with_children(|builder| {
@@ -58,77 +54,6 @@ pub fn spawn_ui(mut cmd: Commands, asset_server: Res<AssetServer>) {
     })
     .id();
 
-  cmd.entity(all_father).push_children(&[empty_row,top_bar,timeline_header,timeline_body,side_modal]);
+  cmd.entity(all_father).push_children(&[empty_row,topbar,timeline_header,timeline_body,side_modal]);
 }
 
-fn spawn_nested_text_bundle(builder: &mut ChildBuilder, font: Handle<Font>, text: &str, font_size: f32) {
-  builder.spawn(TextBundle::from_section(
-      text,
-      TextStyle {
-          font,
-          font_size,
-          color: Color::BLACK,
-      },
-  ));
-}
-
-fn spawn_timeline_body_contents(cmd: &mut Commands, asset_server: Res<AssetServer>) -> Entity {
-  // Spawn a flex container to insert in the grid area, and hold the timeline elements
-  let flex_col_container = cmd.spawn(create_timeline_col_container()).id();
-
-  // Timeline background image
-  let sprite_handle = asset_server.load("SpectrumBg.png"); // 580 x 140 px
-  let background_img_bundle = ImageBundle {
-    style: Style {
-      width: Val::Px(580.),
-      height: Val::Px(140.),
-      ..default()
-    },
-    image: UiImage {
-      texture: sprite_handle.clone(),
-      ..default()
-    },
-    ..default()
-  };
-  let background_img = cmd.spawn(background_img_bundle).id();
-
-  // START Hour boxes
-  info!("time is {}", "potential".to_string());
-  let hours_container = cmd.spawn(create_timeline_hours_row_container()).id();
-  for hour in Hour::VALUES {
-    let hour_outer = cmd.spawn(create_timeline_hour_outer()).id();
-    let hour_inner = cmd.spawn((create_timeline_hour_inner(), hour)).id();
-    // TODO: load fonts once, centrally?
-    let font = asset_server.load("fonts/FiraMono-Medium.ttf");
-    let hour_text = cmd.spawn(TextBundle::from_section(
-      hour.to_string(),
-      TextStyle {
-        font,
-        font_size: 18.,
-        color: Color::WHITE,
-      },
-    )).id();
-    cmd.entity(hour_inner).push_children(&[hour_text]);
-    cmd.entity(hour_outer).push_children(&[hour_inner]);
-    cmd.entity(hours_container).push_children(&[hour_outer]);
-  }
-
-  cmd.entity(flex_col_container).push_children(&[background_img, hours_container]);
-  flex_col_container
-}
-
-pub fn update_active_hour(
-  mut cmd: Commands,
-  hours: Query<(Entity, &Hour)>,
-  chronos: Res<ChronoSphere>
-) {
-  // Current time?
-  let hh = get_chrono_sphere_hh(chronos);
-  // for hour in &hours {
-  for (ent, hour) in hours.iter() {
-    if hh.to_string().eq(&hour.to_string()) {
-      // cmd.entity(hour).insert(Active);
-      info!("{} is {}", hh.to_string(), "active".to_string());
-    }
-  }
-}
