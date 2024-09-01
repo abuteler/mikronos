@@ -1,32 +1,32 @@
 use std::fmt;
 use bevy::prelude::*;
 
-#[derive(Debug)]
+#[derive(Component, Clone, Copy, Debug, PartialEq)]
 pub enum Hour {
-  Zero,
-  One,
-  Two,
-  Three,
-  Four,
-  Five,
-  Six,
-  Seven,
-  Eight,
-  Nine,
-  Ten,
-  Eleven,
-  Twelve,
-  Thirteen,
-  Fourteen,
-  Fifteen,
-  Sixteen,
-  Seventeen,
-  Eighteen,
-  Nineteen,
-  Twenty,
-  TwentyOne,
-  TwentyTwo,
-  TwentyThree
+  Zero          = 0,
+  One           = 1,
+  Two           = 2,
+  Three         = 3,
+  Four          = 4,
+  Five          = 5,
+  Six           = 6,
+  Seven         = 7,
+  Eight         = 8,
+  Nine          = 9,
+  Ten           = 10,
+  Eleven        = 11,
+  Twelve        = 12,
+  Thirteen      = 13,
+  Fourteen      = 14,
+  Fifteen       = 15,
+  Sixteen       = 16,
+  Seventeen     = 17,
+  Eighteen      = 18,
+  Nineteen      = 19,
+  Twenty        = 20,
+  TwentyOne     = 21,
+  TwentyTwo     = 22,
+  TwentyThree   = 23,
 }
 
 impl Hour {
@@ -94,18 +94,22 @@ impl fmt::Display for Hour {
 }
 
 #[derive(Component)]
-pub struct HourBox {
-  pub hour: Hour,
-  pub active: bool,
-}
-impl HourBox {
-  pub fn new(hour: Hour, active: bool) -> Self {
-    Self {
-      hour,
-      active,
-    }
-  }
-}
+pub struct Active;
+
+
+// #[derive(Component)]
+// pub struct HourBox {
+//   pub hour: Hour,
+//   pub outer: Entity,
+// }
+// impl HourBox {
+//   pub fn new(hour: Hour, outer: Entity) -> Self {
+//     Self {
+//       hour,
+//       outer,
+//     }
+//   }
+// }
 
 #[derive(Component)]
 pub struct CurrentTimeText;

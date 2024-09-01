@@ -1,27 +1,26 @@
+
 use bevy::prelude::*;
 // use std::time::Duration;
-use time::{OffsetDateTime, UtcOffset};
+use time::OffsetDateTime;
+use crate::systems::get_local_now;
 
 #[derive(Resource)]
 pub struct ChronoSphere {
   pub now: OffsetDateTime,
   pub weekday: String,
+  pub hh: u8,
+  pub mm: u8,
 }
 
 impl ChronoSphere {
   pub fn new() -> Self {
-    let now = match OffsetDateTime::now_local() {
-      Ok(val) => val,
-      Err(_) => OffsetDateTime::now_utc().to_offset(
-          UtcOffset::from_hms(-3, 0, 0).expect(
-              "IndeterminateOffset for `now_local()`, plus manual setting of offset did not work."
-          )
-      ),
-    };
+    let now = get_local_now();
     let weekday = now.weekday().to_string();
     Self {
       now,
       weekday,
+      hh: now.time().hour(),
+      mm: now.time().minute(),
     }
   }
 }

@@ -1,7 +1,3 @@
 pub mod hour;
 
-pub use hour::{
-  Hour,
-  HourBox,
-  CurrentTimeText
-};
+pub use hour::*;

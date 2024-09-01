@@ -1,11 +1,18 @@
 use bevy::{
     prelude::*,
     window::{
-        WindowResolution, WindowTheme, EnabledButtons
+        EnabledButtons, WindowLevel, WindowResolution, WindowTheme
     },
     winit::WinitSettings,
 };
-use micronos::{plugins::Timeline, resources::ChronoSphere};
+use micronos::{
+  plugins::Timeline,
+  resources::ChronoSphere,
+  systems::{
+    print_chrono_sphere,
+    update_chrono_sphere,
+  }
+};
 
 fn main() {
   App::new()
@@ -17,6 +24,7 @@ fn main() {
         window_theme: Some(WindowTheme::Dark),
         decorations: true,
         transparent: true,
+        window_level: WindowLevel::AlwaysOnTop,
         enabled_buttons: EnabledButtons {
           minimize: false,
           maximize: false,
@@ -28,12 +36,14 @@ fn main() {
     }))
     // Reduce CPU/GPU use when app is unfocused // TODO: chequear que no reconstruya todo en cada loop
     .insert_resource(WinitSettings::desktop_app())
+
     // ClearColor must have 0 alpha, otherwise some color will bleed through
     .insert_resource(ClearColor(Color::NONE))
-    .insert_resource(ChronoSphere::new())
+    .init_resource::<ChronoSphere>()
     .add_plugins(Timeline)
     .add_systems(Startup, setup_camera)
-    // .add_systems(Update, print_chrono_sphere)
+    .add_systems(Update, update_chrono_sphere)
+    .add_systems(Update, print_chrono_sphere)
     .run();
 }
 

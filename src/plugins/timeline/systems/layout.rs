@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 
-use crate::systems::print_chrono_sphere;
+use crate::resources::ChronoSphere;
+use crate::systems::get_chrono_sphere_hh;
 
-use super::components::{CurrentTimeText, Hour, HourBox};
+use super::components::{Active, CurrentTimeText, Hour};
 use super::ui_bundles::{
   create_app_grid_bundle,
   create_empty_grid_area,
@@ -91,21 +92,20 @@ fn spawn_timeline_body_contents(cmd: &mut Commands, asset_server: Res<AssetServe
   };
   let background_img = cmd.spawn(background_img_bundle).id();
 
-  // Hour boxes
+  // START Hour boxes
+  info!("time is {}", "potential".to_string());
   let hours_container = cmd.spawn(create_timeline_hours_row_container()).id();
   for hour in Hour::VALUES {
-    info!("time is {}", "potential".to_string());
     let hour_outer = cmd.spawn(create_timeline_hour_outer()).id();
-    let hour_inner = cmd.spawn(create_timeline_hour_inner()).id();
-     // TODO: load fonts once, centrally?
+    let hour_inner = cmd.spawn((create_timeline_hour_inner(), hour)).id();
+    // TODO: load fonts once, centrally?
     let font = asset_server.load("fonts/FiraMono-Medium.ttf");
-    // TODO: implement with HourBox::new()
     let hour_text = cmd.spawn(TextBundle::from_section(
       hour.to_string(),
       TextStyle {
-          font,
-          font_size: 18.,
-          color: Color::WHITE,
+        font,
+        font_size: 18.,
+        color: Color::WHITE,
       },
     )).id();
     cmd.entity(hour_inner).push_children(&[hour_text]);
@@ -115,4 +115,20 @@ fn spawn_timeline_body_contents(cmd: &mut Commands, asset_server: Res<AssetServe
 
   cmd.entity(flex_col_container).push_children(&[background_img, hours_container]);
   flex_col_container
+}
+
+pub fn update_active_hour(
+  mut cmd: Commands,
+  hours: Query<(Entity, &Hour)>,
+  chronos: Res<ChronoSphere>
+) {
+  // Current time?
+  let hh = get_chrono_sphere_hh(chronos);
+  // for hour in &hours {
+  for (ent, hour) in hours.iter() {
+    if hh.to_string().eq(&hour.to_string()) {
+      // cmd.entity(hour).insert(Active);
+      info!("{} is {}", hh.to_string(), "active".to_string());
+    }
+  }
 }
