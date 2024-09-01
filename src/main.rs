@@ -7,7 +7,7 @@ use bevy::{
 };
 use micronos::{
   plugins::Timeline,
-  resources::ChronoSphere,
+  resources::{ChronoSphere, Fonts, Icons},
   systems::{
     print_chrono_sphere,
     update_chrono_sphere,
@@ -40,6 +40,8 @@ fn main() {
     // ClearColor must have 0 alpha, otherwise some color will bleed through
     .insert_resource(ClearColor(Color::NONE))
     .init_resource::<ChronoSphere>()
+    .init_resource::<Fonts>()
+    .init_resource::<Icons>()
     .add_plugins(Timeline)
     .add_systems(Startup, setup_camera)
     .add_systems(Update, update_chrono_sphere)

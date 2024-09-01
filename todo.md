@@ -1,5 +1,6 @@
 TODO>
-  add icon to toggle window decorations
+  Reusable panel plugin.
   add icon to toggle side panel visibility
   HourBox adaptive render? active == bold
-  Pomodoros!
+  Features!
+    - Pomodoros ftw.

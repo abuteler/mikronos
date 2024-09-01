@@ -1,21 +1,18 @@
 use bevy::prelude::*;
 
+use crate::resources::{Fonts, Icons};
 use super::topbar_bundles::{
   create_row_container,
   create_title,
 };
 
-pub fn spawn_topbar_contents(cmd: &mut Commands, asset_server: &Res<AssetServer>) -> Entity {
+pub fn spawn_topbar_contents(cmd: &mut Commands, fonts: &Res<Fonts>, icons: &Res<Icons>) -> Entity {
   // Spawn a flex container to insert in the grid area, and hold the topbar elements
   let flex_row_container = cmd.spawn(create_row_container()).id();
 
-  // TODO: load fonts once, centrally?
-  let font = asset_server.load("fonts/FiraMono-Medium.ttf");
-
-  let title = cmd.spawn(create_title("Micronos", font.clone())).id();
+  let title = cmd.spawn(create_title("Micronos", fonts.bold.clone())).id();
 
   // collapse icon
-  let sprite_handle = asset_server.load("icons/collapse_content_24dp_000000_FILL0_wght400_GRAD0_opsz24.png"); // 580 x 140 px
   let collapse_img_bundle = ImageBundle {
     style: Style {
       width: Val::Px(24.),
@@ -23,7 +20,7 @@ pub fn spawn_topbar_contents(cmd: &mut Commands, asset_server: &Res<AssetServer>
       ..default()
     },
     image: UiImage {
-      texture: sprite_handle.clone(),
+      texture: icons.collapse.clone(),
       ..default()
     },
     ..default()

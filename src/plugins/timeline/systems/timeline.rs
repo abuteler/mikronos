@@ -57,14 +57,14 @@ pub fn spawn_timeline_body_contents(cmd: &mut Commands, asset_server: Res<AssetS
 }
 
 pub fn update_active_hour(
-  mut cmd: Commands,
+  // mut cmd: Commands,
   hours: Query<(Entity, &Hour)>,
   chronos: Res<ChronoSphere>
 ) {
   // Current time?
   let hh = get_chrono_sphere_hh(chronos);
   // for hour in &hours {
-  for (ent, hour) in hours.iter() {
+  for (_ent, hour) in hours.iter() {
     if hh.to_string().eq(&hour.to_string()) {
       // cmd.entity(hour).insert(Active);
       info!("{} is {}", hh.to_string(), "active".to_string());
