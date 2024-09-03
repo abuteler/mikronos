@@ -8,10 +8,7 @@ use bevy::{
 use micronos::{
   plugins::Timeline,
   resources::{ChronoSphere, Fonts, Icons},
-  systems::{
-    print_chrono_sphere,
-    update_chrono_sphere,
-  }
+  systems::update_chronosphere,
 };
 
 fn main() {
@@ -44,8 +41,7 @@ fn main() {
     .init_resource::<Icons>()
     .add_plugins(Timeline)
     .add_systems(Startup, setup_camera)
-    .add_systems(Update, update_chrono_sphere)
-    .add_systems(Update, print_chrono_sphere)
+    .add_systems(Update, update_chronosphere)
     .run();
 }
 

@@ -1,13 +1,13 @@
 
 use bevy::prelude::*;
 // use std::time::Duration;
-use time::OffsetDateTime;
+use time::{OffsetDateTime, Weekday};
 use crate::systems::get_local_now;
 
 #[derive(Resource)]
 pub struct ChronoSphere {
   pub now: OffsetDateTime,
-  pub weekday: String,
+  pub weekday: Weekday,
   pub hh: u8,
   pub mm: u8,
 }
@@ -15,7 +15,7 @@ pub struct ChronoSphere {
 impl ChronoSphere {
   pub fn new() -> Self {
     let now = get_local_now();
-    let weekday = now.weekday().to_string();
+    let weekday = now.weekday();
     Self {
       now,
       weekday,

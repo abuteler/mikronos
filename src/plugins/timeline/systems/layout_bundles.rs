@@ -7,12 +7,12 @@ pub fn create_app_grid_bundle() -> NodeBundle {
       width: Val::Percent(100.),
       height: Val::Percent(100.),
       grid_template_columns: vec![
-        GridTrack::px(610.),  // main app
+        GridTrack::px(620.),  // main app
         GridTrack::auto()     // Side modal at flex width
       ],
       grid_template_rows: vec![
         GridTrack::flex(1.),  // to be transparent so Side modal can be taller
-        GridTrack::px(25.),   // app topbar: name + toolbar
+        GridTrack::px(28.),   // app topbar: name + toolbar
         GridTrack::px(75.),   // timeline header
         GridTrack::px(180.),  // timeline body
       ],
@@ -86,7 +86,7 @@ pub fn create_side_panel_grid_area() -> NodeBundle {
       grid_row: GridPlacement::start_end(1, 5),
       ..default()
     },
-    background_color: BackgroundColor(Color::WHITE),
+    background_color: BackgroundColor(Color::srgba_u8(180, 180, 210, 75)),
     ..default()
   }
 }

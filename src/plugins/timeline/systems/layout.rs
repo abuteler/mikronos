@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 
 use crate::resources::{Fonts, Icons};
-use super::components::CurrentTimeText;
 use super::layout_bundles::{
   create_app_grid_bundle,
   create_empty_grid_area,
@@ -11,6 +10,7 @@ use super::layout_bundles::{
   create_side_panel_grid_area,
 };
 use super::topbar::spawn_topbar_contents;
+use super::header::spawn_header_contents;
 use super::timeline::spawn_timeline_body_contents;
 
 pub fn spawn_ui(mut cmd: Commands, asset_server: Res<AssetServer>, fonts: Res<Fonts>, icons: Res<Icons>) {
@@ -23,23 +23,9 @@ pub fn spawn_ui(mut cmd: Commands, asset_server: Res<AssetServer>, fonts: Res<Fo
   let topbar_contents = spawn_topbar_contents(&mut cmd, &fonts, &icons); // todo: decouple system
   cmd.entity(topbar).push_children(&[topbar_contents]);
   // Col 1 row 3
-  let timeline_header = cmd.spawn(create_timeline_header_grid_area())
-    .with_children(|builder| {
-      // current time placer
-      builder
-        .spawn((
-          TextBundle::from_section(
-            "CurrentTime",
-            TextStyle {
-              font: fonts.bold.clone(),
-              font_size: 14.0,
-              ..default()
-            },
-          ),
-          CurrentTimeText,
-        ));
-      })
-    .id();
+  let timeline_header = cmd.spawn(create_timeline_header_grid_area()).id();
+  let header_contents = spawn_header_contents(&mut cmd, &fonts);
+  cmd.entity(timeline_header).push_children(&[header_contents]);
   // Col 1 row 4
   let timeline_body = cmd.spawn(create_timeline_body_grid_area()).id();
   let timeline_body_contents = spawn_timeline_body_contents(&mut cmd, asset_server); // todo: decouple system

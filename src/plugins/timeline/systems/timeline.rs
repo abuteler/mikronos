@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::resources::ChronoSphere;
-use crate::systems::get_chrono_sphere_hh;
+use crate::systems::get_chronosphere_hh;
 
 use super::components::{Active, CurrentTimeText, Hour};
 use super::timeline_bundles::{
@@ -62,7 +62,7 @@ pub fn update_active_hour(
   chronos: Res<ChronoSphere>
 ) {
   // Current time?
-  let hh = get_chrono_sphere_hh(chronos);
+  let hh = get_chronosphere_hh(chronos);
   // for hour in &hours {
   for (_ent, hour) in hours.iter() {
     if hh.to_string().eq(&hour.to_string()) {
