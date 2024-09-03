@@ -1,18 +1,26 @@
 [package]
-name = "micronos" #Time-hold?
-version = "0.2.0"
+name = "timehold"
+version = "0.2.1"
 authors = ["Alejandro R. Buteler <alebuteler@gmail.com>"]
 edition = "2021"
 rust-version = "1.79.0"
 
 
 [dependencies]
-bevy = { version = "0.14.0", features = ["dynamic_linking"] }
+bevy = { version = "0.14.0" }
+# keep the following in sync with Bevy's dependencies
+winit = { version = "0.30", default-features = false }
+image = { version = "0.25", default-features = false }
+## This greatly improves WGPU's performance due to its heavy use of trace! calls
 log = { version = "*", features = ["max_level_debug", "release_max_level_warn"] }
 time = { version = "0.3.34", features = ["local-offset"] }
 # for app persistence:
 serde = { version = "1", features = ["derive"] }
 
+[features]
+dev = [
+    "bevy/dynamic_linking",
+]
 
 # Enable a small amount of optimization in debug mode.
 [profile.dev]
@@ -30,3 +38,6 @@ codegen-units = 1
 # Do a second optimization pass over the entire program, including dependencies.
 # Slightly slows compile times, marginal improvements.
 lto = "thin"
+
+[build-dependencies]
+embed-resource = "2.4.3"

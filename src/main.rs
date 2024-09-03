@@ -1,3 +1,6 @@
+// disable console on windows for release builds
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 use bevy::{
     prelude::*,
     window::{
@@ -5,18 +8,18 @@ use bevy::{
     },
     winit::WinitSettings,
 };
-use micronos::{
+use timehold::{
   plugins::Timeline,
   resources::{ChronoSphere, Fonts, Icons},
-  systems::update_chronosphere,
+  systems::{update_chronosphere, set_window_icon},
 };
 
 fn main() {
   App::new()
     .add_plugins(DefaultPlugins.set(WindowPlugin {
       primary_window: Some(Window {
-        title: "micronos".into(),
-        name: Some("micronos".into()),
+        title: "timehold".into(),
+        name: Some("timehold".into()),
         resolution: WindowResolution::new(850., 450.).with_scale_factor_override(1.0),
         window_theme: Some(WindowTheme::Dark),
         decorations: false,
@@ -40,6 +43,7 @@ fn main() {
     .init_resource::<Fonts>()
     .init_resource::<Icons>()
     .add_plugins(Timeline)
+    .add_systems(Startup, set_window_icon)
     .add_systems(Startup, setup_camera)
     .add_systems(Update, update_chronosphere)
     .run();
