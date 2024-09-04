@@ -21,7 +21,7 @@ pub fn spawn_topbar_contents(cmd: &mut Commands, fonts: &Res<Fonts>, icons: &Res
       ..default()
     },
     image: UiImage {
-      texture: icons.shield.clone(),
+      texture: icons.app_icon.clone(),
       ..default()
     },
     ..default()

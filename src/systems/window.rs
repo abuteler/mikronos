@@ -14,7 +14,7 @@ pub fn set_window_icon(
       return;
   };
   let icon_buf = Cursor::new(include_bytes!(
-      "../../assets/icons/app_icon.png"
+      "../../assets/icons/app_icon_48px.png"
   ));
   if let Ok(image) = image::load(icon_buf, image::ImageFormat::Png) {
       let image = image.into_rgba8();
