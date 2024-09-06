@@ -20,9 +20,10 @@ fn main() {
       primary_window: Some(Window {
         title: "timehold".into(),
         name: Some("timehold".into()),
-        resolution: WindowResolution::new(850., 450.).with_scale_factor_override(1.0),
+        // resolution: WindowResolution::new(850., 450.).with_scale_factor_override(1.0),
+        resolution: WindowResolution::new(600., 240.).with_scale_factor_override(1.0),
         window_theme: Some(WindowTheme::Dark),
-        decorations: false,
+        decorations: true,
         transparent: true,
         window_level: WindowLevel::AlwaysOnTop,
         enabled_buttons: EnabledButtons {

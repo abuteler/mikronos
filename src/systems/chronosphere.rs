@@ -1,5 +1,6 @@
 use bevy::prelude::*;
-use time::{OffsetDateTime, UtcOffset, Weekday};
+use time::{OffsetDateTime, UtcOffset};
+
 use crate::resources::ChronoSphere;
 
 pub fn get_local_now() -> OffsetDateTime {
@@ -11,18 +12,6 @@ pub fn get_local_now() -> OffsetDateTime {
       )
     ),
   }
-}
-
-pub fn get_chronosphere_hh(chronos: Res<ChronoSphere>) -> u8 {
-  chronos.hh
-}
-
-pub fn get_chronosphere_mm(chronos: Res<ChronoSphere>) -> u8 {
-  chronos.mm
-}
-
-pub fn get_chronosphere_weekday(chronos: Res<ChronoSphere>) -> Weekday {
-  chronos.weekday
 }
 
 pub fn update_chronosphere(mut chronos: ResMut<ChronoSphere>) {

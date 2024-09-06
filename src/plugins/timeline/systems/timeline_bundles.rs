@@ -1,16 +1,21 @@
 use bevy::prelude::*;
 
-pub fn create_col_container() -> NodeBundle {
+pub const CONTAINER_PADDING_PX: f32 = 10.;
+pub const TIMELINE_WIDTH_PX: f32 = 580.;
+pub const HOURS_PADDING_PX: f32 = 7.;
+pub const DIAL_WIDTH_PX: f32 = 2.;
+
+pub fn create_flex_container_col() -> NodeBundle {
   NodeBundle {
     style: Style {
+      position_type: PositionType::Relative,
       display: Display::Flex,
       flex_direction: FlexDirection::Column,
       align_items: AlignItems::Center,
       justify_content: JustifyContent::Center,
-      column_gap: Val::Px(3.),
-      width: Val::Percent(100.),
+      width: Val::Px(TIMELINE_WIDTH_PX+CONTAINER_PADDING_PX*2.),
       height: Val::Percent(100.),
-      padding: UiRect::all(Val::Px(5.0)).with_bottom(Val::Px(10.)),
+      padding: UiRect::all(Val::Px(CONTAINER_PADDING_PX)),
       ..default()
     },
     background_color: BackgroundColor(Color::BLACK),
@@ -24,10 +29,9 @@ pub fn create_hours_row_container() -> NodeBundle {
     style: Style {
       display: Display::Flex,
       flex_direction: FlexDirection::Row,
-      align_items: AlignItems::Center,
-      justify_content: JustifyContent::SpaceEvenly,
-      width: Val::Percent(100.),
       height: Val::Px(28.),
+      width: Val::Px(TIMELINE_WIDTH_PX),
+      column_gap: Val::Px(HOURS_PADDING_PX),
       ..default()
     },
     background_color: BackgroundColor(Color::BLACK),
@@ -62,6 +66,23 @@ pub fn create_hour_inner() -> NodeBundle {
       ..default()
     },
     background_color: BackgroundColor(Color::BLACK),
+    ..default()
+  }
+}
+
+pub fn create_dial(position: f32) -> NodeBundle {
+  NodeBundle {
+    style: Style {
+      display: Display::Block,
+      position_type: PositionType::Absolute,
+      top: Val::Px(18.),
+      left: Val::Px(position),
+      width: Val::Px(DIAL_WIDTH_PX),
+      height: Val::Px(130.),
+      ..default()
+    },
+    z_index: ZIndex::Local(1),
+    background_color: BackgroundColor(Color::srgba_u8(255, 255, 255, 120)),
     ..default()
   }
 }

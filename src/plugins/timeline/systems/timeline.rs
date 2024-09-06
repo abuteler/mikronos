@@ -1,25 +1,30 @@
 use bevy::prelude::*;
 
-use crate::resources::ChronoSphere;
-use crate::systems::get_chronosphere_hh;
+use crate::resources::{ChronoSphere, Fonts};
+use crate::systems::create_text_bundle;
 
-use super::components::{Active, CurrentTimeText, Hour};
+use super::components::{Active, Hour, DialMarker};
 use super::timeline_bundles::{
-  create_col_container,
+  create_flex_container_col,
   create_hours_row_container,
   create_hour_outer,
   create_hour_inner,
+  create_dial,
+  CONTAINER_PADDING_PX,
+  TIMELINE_WIDTH_PX,
+  HOURS_PADDING_PX,
+  DIAL_WIDTH_PX,
 };
 
-pub fn spawn_timeline_body_contents(cmd: &mut Commands, asset_server: Res<AssetServer>) -> Entity {
+pub fn spawn_timeline_body_contents(cmd: &mut Commands, asset_server: Res<AssetServer>, fonts: &Res<Fonts>, chronos: Res<ChronoSphere>) -> Entity {
   // Spawn a flex container to insert in the grid area, and hold the timeline elements
-  let flex_col_container = cmd.spawn(create_col_container()).id();
+  let body_container = cmd.spawn(create_flex_container_col()).id();
 
   // Timeline background image
   let sprite_handle = asset_server.load("SpectrumBg.png"); // 580 x 140 px
   let background_img_bundle = ImageBundle {
     style: Style {
-      width: Val::Px(580.),
+      width: Val::Px(TIMELINE_WIDTH_PX),
       height: Val::Px(140.),
       ..default()
     },
@@ -37,37 +42,47 @@ pub fn spawn_timeline_body_contents(cmd: &mut Commands, asset_server: Res<AssetS
   for hour in Hour::VALUES {
     let hour_outer = cmd.spawn(create_hour_outer()).id();
     let hour_inner = cmd.spawn((create_hour_inner(), hour)).id();
-    // TODO: load fonts once, centrally?
-    let font = asset_server.load("fonts/FiraMono-Medium.ttf");
-    let hour_text = cmd.spawn(TextBundle::from_section(
-      hour.to_string(),
-      TextStyle {
-        font,
-        font_size: 18.,
-        color: Color::WHITE,
-      },
+    let hour_text = cmd.spawn(create_text_bundle(
+      &hour.to_string(),
+      fonts.medium.clone(),
+      18.,
+      Color::WHITE,
     )).id();
     cmd.entity(hour_inner).push_children(&[hour_text]);
     cmd.entity(hour_outer).push_children(&[hour_inner]);
     cmd.entity(hours_container).push_children(&[hour_outer]);
   }
+  // Add dial
+  let position = calc_dial_horizontal_position(chronos.get_chronosphere_hh(), chronos.get_chronosphere_mm());
+  let dial = cmd.spawn((create_dial(position), DialMarker)).id();
 
-  cmd.entity(flex_col_container).push_children(&[background_img, hours_container]);
-  flex_col_container
+  cmd.entity(body_container).push_children(&[background_img, hours_container, dial]);
+  body_container
 }
 
-pub fn update_active_hour(
+pub fn refresh_timeline(
+  chronos: Res<ChronoSphere>,
+  mut dial: Query<&mut Style, With<DialMarker>>,
   // mut cmd: Commands,
   hours: Query<(Entity, &Hour)>,
-  chronos: Res<ChronoSphere>
 ) {
-  // Current time?
-  let hh = get_chronosphere_hh(chronos);
+  // Current time
+  let new_hh = chronos.get_chronosphere_hh();
+  let new_mm = chronos.get_chronosphere_mm();
+  let mut style = dial.single_mut();
+  style.left = Val::Px(calc_dial_horizontal_position(new_hh, new_mm));
+  
   // for hour in &hours {
   for (_ent, hour) in hours.iter() {
-    if hh.to_string().eq(&hour.to_string()) {
+    if new_hh.to_string().eq(&hour.to_string()) {
       // cmd.entity(hour).insert(Active);
-      info!("{} is {}", hh.to_string(), "active".to_string());
+      info!("Now is {}:{}", new_hh.to_string(), new_mm.to_string());
     }
   }
+}
+
+fn calc_dial_horizontal_position(hours:f32, minutes: f32) -> f32 {
+  let hour_width_px = (TIMELINE_WIDTH_PX - 23. * 7.) / 24.;
+  let cumulative_padding_px = CONTAINER_PADDING_PX + hours * HOURS_PADDING_PX;
+  (hours * hour_width_px) + cumulative_padding_px + (hour_width_px/60. * minutes) - DIAL_WIDTH_PX
 }
