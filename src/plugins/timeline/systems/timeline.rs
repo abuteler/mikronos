@@ -16,7 +16,7 @@ use super::timeline_bundles::{
   DIAL_WIDTH_PX,
 };
 
-pub fn spawn_timeline_body_contents(cmd: &mut Commands, asset_server: Res<AssetServer>, fonts: &Res<Fonts>, chronos: Res<ChronoSphere>) -> Entity {
+pub fn spawn_timeline_body_contents(cmd: &mut Commands, asset_server: Res<AssetServer>, fonts: &Res<Fonts>, chrono: Res<ChronoSphere>) -> Entity {
   // Spawn a flex container to insert in the grid area, and hold the timeline elements
   let body_container = cmd.spawn(create_flex_container_col()).id();
 
@@ -37,7 +37,7 @@ pub fn spawn_timeline_body_contents(cmd: &mut Commands, asset_server: Res<AssetS
   let background_img = cmd.spawn(background_img_bundle).id();
 
   // START Hour boxes
-  info!("time is {}", "potential".to_string());
+  info!("Time is {}", "potential".to_string());
   let hours_container = cmd.spawn(create_hours_row_container()).id();
   for hour in Hour::VALUES {
     let hour_outer = cmd.spawn(create_hour_outer()).id();
@@ -53,7 +53,7 @@ pub fn spawn_timeline_body_contents(cmd: &mut Commands, asset_server: Res<AssetS
     cmd.entity(hours_container).push_children(&[hour_outer]);
   }
   // Add dial
-  let position = calc_dial_horizontal_position(chronos.get_chronosphere_hh(), chronos.get_chronosphere_mm());
+  let position = calc_dial_horizontal_position(chrono.hour(), chrono.minutes());
   let dial = cmd.spawn((create_dial(position), DialMarker)).id();
 
   cmd.entity(body_container).push_children(&[background_img, hours_container, dial]);
@@ -61,22 +61,23 @@ pub fn spawn_timeline_body_contents(cmd: &mut Commands, asset_server: Res<AssetS
 }
 
 pub fn refresh_timeline(
-  chronos: Res<ChronoSphere>,
+  chrono: Res<ChronoSphere>,
   mut dial: Query<&mut Style, With<DialMarker>>,
   // mut cmd: Commands,
   hours: Query<(Entity, &Hour)>,
 ) {
   // Current time
-  let new_hh = chronos.get_chronosphere_hh();
-  let new_mm = chronos.get_chronosphere_mm();
+  let new_hh = chrono.hour();
+  let new_mm = chrono.minutes();
   let mut style = dial.single_mut();
   style.left = Val::Px(calc_dial_horizontal_position(new_hh, new_mm));
-  
+
   // for hour in &hours {
   for (_ent, hour) in hours.iter() {
-    if new_hh.to_string().eq(&hour.to_string()) {
+    let formatted_new_hh = chrono.formatted_hh();
+    if formatted_new_hh.eq(&hour.to_string()) {
       // cmd.entity(hour).insert(Active);
-      info!("Now is {}:{}", new_hh.to_string(), new_mm.to_string());
+      // info!("Now is {}:{}", formatted_new_hh, chrono.formatted_mm());
     }
   }
 }

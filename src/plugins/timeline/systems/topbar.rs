@@ -39,7 +39,6 @@ pub fn spawn_topbar_contents(cmd: &mut Commands, fonts: &Res<Fonts>, icons: &Res
 
   // Right container: icon buttons
   let flex_container_right = cmd.spawn(create_flex_container_right()).id();
-  
 
   cmd.entity(flex_container_left).push_children(&[app_icon, app_title]);
   cmd.entity(flex_container_right).with_children(|child_builder| {

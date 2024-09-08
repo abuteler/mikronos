@@ -13,7 +13,7 @@ winit = { version = "0.30", default-features = false }
 image = { version = "0.25", default-features = false }
 ## This greatly improves WGPU's performance due to its heavy use of trace! calls
 log = { version = "*", features = ["max_level_debug", "release_max_level_warn"] }
-time = { version = "0.3.34", features = ["local-offset"] }
+chrono = { version = "0.4.38" }
 # for app persistence:
 serde = { version = "1", features = ["derive"] }
 

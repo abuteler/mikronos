@@ -25,8 +25,8 @@ pub fn spawn_header_contents(cmd: &mut Commands, fonts: &Res<Fonts>) -> Entity {
 
 pub fn refresh_heading(
   mut q: Query<&mut Text, With<CurrentTimeText>>,
-  chronos: Res<ChronoSphere>
+  chrono: Res<ChronoSphere>
 ) {
   let mut text = q.single_mut();
-  text.sections[0].value = format!("{:?} x {:?}:{:?} {:?}", chronos.weekday, chronos.hh, chronos.mm, chronos.now);
+  text.sections[0].value = format!("{} | {}:{}        ¬ {:?}", chrono.weekday(), chrono.formatted_hh(), chrono.formatted_mm(), chrono.now);
 }

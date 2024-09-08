@@ -18,7 +18,7 @@ fn main() {
   App::new()
     .add_plugins(DefaultPlugins.set(WindowPlugin {
       primary_window: Some(Window {
-        title: "timehold".into(),
+        title: "Timehold".into(),
         name: Some("timehold".into()),
         // resolution: WindowResolution::new(850., 450.).with_scale_factor_override(1.0),
         resolution: WindowResolution::new(600., 240.).with_scale_factor_override(1.0),
