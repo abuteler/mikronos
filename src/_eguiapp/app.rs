@@ -35,7 +35,7 @@ pub struct App {
 
 impl Default for App {
     fn default() -> Self {
-        Self { 
+        Self {
             weekday: "Tuesday".to_string(),
             compact_mode: true,
             always_on_top: false,

@@ -1,46 +1,56 @@
-
-#![warn(clippy::all, rust_2018_idioms)]
+// disable console on windows for release builds
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-// When compiling natively:
-#[cfg(not(target_arch = "wasm32"))]
-fn main() -> eframe::Result<()> {
-    env_logger::init(); // Log to stderr (if you run with `RUST_LOG=debug`).
+use bevy::{
+    prelude::*,
+    window::{
+        EnabledButtons, WindowLevel, WindowResolution, WindowTheme
+    },
+    winit::WinitSettings,
+};
+use timehold::{
+  plugins::Timeline,
+  resources::{ChronoSphere, Fonts, Icons},
+  systems::{update_chronosphere, set_window_icon},
+};
 
-    let native_options = eframe::NativeOptions {
-        initial_window_size: Some(micronos::App::default().window_sizes.min),
-        max_window_size: Some(micronos::App::default().window_sizes.max),
-        min_window_size: Some(micronos::App::default().window_sizes.min),
-        ..Default::default()
-    };
-    eframe::run_native(
-        "Micronos",
-        native_options,
-        Box::new(|cc| {
-            egui_extras::install_image_loaders(&cc.egui_ctx);
-            Box::new(micronos::App::new(cc))
-        }),
-    )
-}
-
-// When compiling to web using trunk:
-/*
-#[cfg(target_arch = "wasm32")]
 fn main() {
-    // Redirect `log` message to `console.log` and friends:
-    eframe::WebLogger::init(log::LevelFilter::Debug).ok();
+  App::new()
+    .add_plugins(DefaultPlugins.set(WindowPlugin {
+      primary_window: Some(Window {
+        title: "Timehold".into(),
+        name: Some("timehold".into()),
+        // resolution: WindowResolution::new(850., 450.).with_scale_factor_override(1.0),
+        resolution: WindowResolution::new(600., 240.).with_scale_factor_override(1.0),
+        window_theme: Some(WindowTheme::Dark),
+        decorations: true,
+        transparent: true,
+        window_level: WindowLevel::AlwaysOnTop,
+        enabled_buttons: EnabledButtons {
+          minimize: false,
+          maximize: false,
+          close: false,
+        },
+        ..default()
+      }),
+      ..default()
+    }))
+    // Reduce CPU/GPU use when app is unfocused // TODO: chequear que no reconstruya todo en cada loop
+    .insert_resource(WinitSettings::desktop_app())
 
-    let web_options = eframe::WebOptions::default();
-
-    wasm_bindgen_futures::spawn_local(async {
-        eframe::WebRunner::new()
-            .start(
-                "the_canvas_id", // hardcode it
-                web_options,
-                Box::new(|cc| Box::new(micronos::App::new(cc))),
-            )
-            .await
-            .expect("failed to start eframe");
-    });
+    // ClearColor must have 0 alpha, otherwise some color will bleed through
+    .insert_resource(ClearColor(Color::NONE))
+    .init_resource::<ChronoSphere>()
+    .init_resource::<Fonts>()
+    .init_resource::<Icons>()
+    .add_plugins(Timeline)
+    .add_systems(Startup, set_window_icon)
+    .add_systems(Startup, setup_camera)
+    .add_systems(Update, update_chronosphere)
+    .run();
 }
- */
+
+// Spawns the camera that draws UI
+fn setup_camera(mut cmd: Commands) {
+    cmd.spawn(Camera2dBundle::default());
+}
