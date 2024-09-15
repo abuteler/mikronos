@@ -69,20 +69,3 @@ pub fn create_hour_inner() -> NodeBundle {
     ..default()
   }
 }
-
-pub fn create_dial(position: f32) -> NodeBundle {
-  NodeBundle {
-    style: Style {
-      display: Display::Block,
-      position_type: PositionType::Absolute,
-      top: Val::Px(18.),
-      left: Val::Px(position),
-      width: Val::Px(DIAL_WIDTH_PX),
-      height: Val::Px(130.),
-      ..default()
-    },
-    z_index: ZIndex::Local(1),
-    background_color: BackgroundColor(Color::srgba_u8(255, 255, 255, 120)),
-    ..default()
-  }
-}

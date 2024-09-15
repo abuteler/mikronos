@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use chrono::prelude::*;
 use chrono::{DateTime, Local};
 
-use crate::systems::get_local_now;
+// use crate::systems::get_local_now;
 
 #[derive(Resource)]
 pub struct ChronoSphere {
@@ -12,10 +12,13 @@ pub struct ChronoSphere {
 
 impl ChronoSphere {
   pub fn new() -> Self {
-    let now = get_local_now();
+    let now = Local::now();
     Self {
       now,
     }
+  }
+  pub fn update_chronosphere(mut chrono: ResMut<ChronoSphere>) {
+    chrono.now = Local::now();
   }
   pub fn hour(&self) -> f32 {
     self.now.hour() as f32

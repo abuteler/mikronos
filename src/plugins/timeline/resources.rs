@@ -1,6 +1,15 @@
 use bevy::prelude::*;
 
-#[derive(Resource, Default)]
+#[derive(Resource)]
 pub struct TimelineAssets {
-  pub background_handle: Option<Handle<Image>>,
+  pub spectrum_bg: Handle<Image>,
+}
+
+impl FromWorld for TimelineAssets {
+  fn from_world(world: &mut World) -> Self {
+    let spectrum_bg = world.resource::<AssetServer>().load("SpectrumBg.png");
+    Self {
+      spectrum_bg,
+    }
+  }
 }

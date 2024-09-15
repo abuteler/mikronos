@@ -11,7 +11,7 @@ use bevy::{
 use timehold::{
   plugins::Timeline,
   resources::{ChronoSphere, Fonts, Icons},
-  systems::{update_chronosphere, set_window_icon},
+  systems::set_window_icon,
 };
 
 fn main() {
@@ -37,7 +37,6 @@ fn main() {
     }))
     // Reduce CPU/GPU use when app is unfocused // TODO: chequear que no reconstruya todo en cada loop
     .insert_resource(WinitSettings::desktop_app())
-
     // ClearColor must have 0 alpha, otherwise some color will bleed through
     .insert_resource(ClearColor(Color::NONE))
     .init_resource::<ChronoSphere>()
@@ -46,7 +45,7 @@ fn main() {
     .add_plugins(Timeline)
     .add_systems(Startup, set_window_icon)
     .add_systems(Startup, setup_camera)
-    .add_systems(Update, update_chronosphere)
+    .add_systems(Update, ChronoSphere::update_chronosphere)
     .run();
 }
 

@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-
+use crate::plugins::timeline::resources::TimelineAssets;
 use crate::resources::{ChronoSphere, Fonts, Icons};
 use super::layout_bundles::{
   create_app_grid_bundle,
@@ -13,7 +13,7 @@ use super::topbar::spawn_topbar_contents;
 use super::header::spawn_header_contents;
 use super::timeline::spawn_timeline_body_contents;
 
-pub fn spawn_ui(mut cmd: Commands, asset_server: Res<AssetServer>, fonts: Res<Fonts>, icons: Res<Icons>, chrono: Res<ChronoSphere>) {
+pub fn spawn_ui(mut cmd: Commands, timeline_assets: Res<TimelineAssets>, fonts: Res<Fonts>, icons: Res<Icons>, chrono: Res<ChronoSphere>) {
   // App container
   let all_father = cmd.spawn(create_app_grid_bundle()).id();
   // Col 1 row 1
@@ -28,7 +28,7 @@ pub fn spawn_ui(mut cmd: Commands, asset_server: Res<AssetServer>, fonts: Res<Fo
   cmd.entity(timeline_header).push_children(&[header_contents]);
   // Col 1 row 4
   let timeline_body = cmd.spawn(create_timeline_body_grid_area()).id();
-  let timeline_body_contents = spawn_timeline_body_contents(&mut cmd, asset_server, &fonts, chrono); // todo: decouple system
+  let timeline_body_contents = spawn_timeline_body_contents(&mut cmd, timeline_assets, &fonts, chrono); // todo: decouple system
   cmd.entity(timeline_body).push_children(&[timeline_body_contents]);
 
   // Col 2 row 1-4
