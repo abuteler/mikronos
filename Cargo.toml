@@ -3,19 +3,19 @@ name = "timehold"
 version = "0.2.1"
 authors = ["Alejandro R. Buteler <alebuteler@gmail.com>"]
 edition = "2021"
-rust-version = "1.79.0"
+rust-version = "1.82.0"
 
 
 [dependencies]
-bevy = { version = "0.14.0" }
+bevy = { version = "0.14.2" }
 # keep the following in sync with Bevy's dependencies
 winit = { version = "0.30", default-features = false }
-image = { version = "0.25", default-features = false }
+image = { version = "0.25.5", default-features = false }
 ## This greatly improves WGPU's performance due to its heavy use of trace! calls
 log = { version = "*", features = ["max_level_debug", "release_max_level_warn"] }
 chrono = { version = "0.4.38" }
 # for app persistence:
-serde = { version = "1", features = ["derive"] }
+serde = { version = "1.0.214", features = ["derive"] }
 
 [features]
 dev = [
@@ -40,4 +40,4 @@ codegen-units = 1
 lto = "thin"
 
 [build-dependencies]
-embed-resource = "2.4.3"
+embed-resource = "3.0.1"
